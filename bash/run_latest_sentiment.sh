@@ -1,9 +1,8 @@
-export DATE='01-06-2024|30-06-2024' &&
+export DATE='latest' &&
 export DAILYFX='y' &&
 export ECONTIMES='y' &&
-export FINANCIALTIMES='y' &&
 export SUFFIX='test' &&
 export RUN_SCRAPER='y' &&
 export RUN_PREDICTION='y' &&
-export PREPARE_STREAMLIT='y' &&
+export PREPARE_STREAMLIT='n' &&
 make predict-sentiments
