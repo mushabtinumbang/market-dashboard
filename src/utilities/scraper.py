@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import re
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from loguru import logger
 from src.utilities.utils import format_dates, date_to_integer
@@ -37,7 +37,7 @@ def dailyforex(
             
             for j in titles:
                 urls = j.find_all('a')
-                date = datetime.strptime(j.find('h2', class_ = 'text-black dfx-h-3').text, "%d %B, %Y (%A)").strftime("%Y-%m-%d")
+                date = datetime.strptime(j.find('h2', class_ = 'text-black dfx-h-3').text, "%d %B, %Y (%A)").strftime("%d-%m-%Y")
                 news = j.find_all("span", class_ = 'dfx-articleListItem__title')
                 headlines, category = [], "forex"
 
@@ -80,7 +80,7 @@ def economictimes(
         soup = BeautifulSoup(response, 'lxml')
         cols = soup.find_all('ul', class_='content')
         date_obj = soup.find('td', class_ = 'contentbox5').find_all('b')[1].text
-        date = datetime.strptime(date_obj, "%d %b, %Y").strftime("%Y-%m-%d")
+        date = datetime.strptime(date_obj, "%d %b, %Y").strftime("%d-%m-%Y")
 
         for i in range(2):
             for j in cols[i]:
@@ -109,4 +109,53 @@ def economictimes(
     # Export to DataFrame
     final_df = pd.DataFrame(data)
 
+    return final_df
+
+def financialtimes(
+        date
+):
+    base_url, data, i, scrape = "https://www.ft.com/currencies?page=" , {"title" : [], "date" : [], "url" : [], "category" : []}, 1, True
+    
+    if len(date) == 2:
+        date_start, date_end = date[0], date[1]
+
+    else:
+        date_start = date[0].replace(hour=0, minute=0, second=0, microsecond=0)
+        date_end = (date_start + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    
+    while scrape:
+        url = f"{base_url}{i}"
+        html_text = requests.get(url).text
+        soup = BeautifulSoup(html_text, 'lxml')
+        all_titles = soup.find_all('li', class_ = 'o-teaser-collection__item o-grid-row')
+
+        for title in all_titles:
+            try:
+                # find data
+                date = datetime.strptime(title.find('time', class_='o-date').get_text(), '%A, %d %B, %Y')
+
+                # check whether the data is expected or not, if not then break.
+                if not date_start <= date <= date_end:
+                    scrape = False
+                    break
+
+                # find data      
+                category = title.find('a', class_='o-teaser__tag').get_text()
+                title_div = title.find('a', class_='js-teaser-heading-link')
+                title_url = f"ft.com{title_div.get('href')}"
+                header = title_div.get_text()
+
+                # append data
+                data["title"].append(header)
+                data["date"].append(date.strftime('%d-%m-%Y'))
+                data["url"].append(title_url)
+                data["category"].append(category)
+
+            except AttributeError as e:
+                pass
+
+        i += 1
+
+    final_df = pd.DataFrame(data)
+    
     return final_df

@@ -17,7 +17,7 @@ create-env:
 
 # Run Main Predict Pipeline
 predict-sentiments:
-	$(PYTHON) -m src.main.main_predict_sentiments --date='$(DATE)' --dailyfx='$(DAILYFX)' --econtimes='$(ECONTIMES)' --suffix='$(SUFFIX)' --pipeline=$(RUN_SCRAPER) --pipeline=$(RUN_PREDICTION)  --pipeline=$(PREPARE_STREAMLIT) 
+	$(PYTHON) -m src.main.main_predict_sentiments --date='$(DATE)' --dailyfx='$(DAILYFX)' --econtimes='$(ECONTIMES)'  --financialtimes='$(FINANCIALTIMES)' --suffix='$(SUFFIX)' --pipeline=$(RUN_SCRAPER) --pipeline=$(RUN_PREDICTION)  --pipeline=$(PREPARE_STREAMLIT) 
 
 run-streamlit:
 	$(STREAMLIT) run app.py

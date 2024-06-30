@@ -13,8 +13,10 @@ import src.utilities.utils as utils
 def run_postprocess(
   dailyfx = True,
   econtimes = True,
+  ftimes = True,
   dailyfx_pred_feathername= 'dailyfx_result_.feather',
   econtimes_pred_feathername= 'econtimes_result_.feather',
+  financialtimes_pred_feathername = 'financialtimes_result_.feather',
   out_feathername= 'combined_data.feather'
 
 ):
@@ -31,13 +33,22 @@ def run_postprocess(
         # Read Predicted data
         logger.info("Combining DailyFX Data ... \n")
         dailyfx_pred = utils.load(os.path.join(predicted_data_path, dailyfx_pred_feathername))
+        dailyfx_pred["source"] = "dailyfx"
         temp_df = pd.concat([temp_df, dailyfx_pred]).drop_duplicates().reset_index(drop=True)
 
     if econtimes:
         # Read Econtimes
         logger.info("Combining Economic Times Data ... \n")
         econtimes_pred = utils.load(os.path.join(predicted_data_path, econtimes_pred_feathername))
+        econtimes_pred["source"] = "econtimes"
         temp_df = pd.concat([temp_df, econtimes_pred]).drop_duplicates().reset_index(drop=True)
+
+    if ftimes:
+        # Read Financial Times Data
+        logger.info("Combining Financial Times Data ... \n")
+        ftimes_pred = utils.load(os.path.join(predicted_data_path, financialtimes_pred_feathername))
+        ftimes_pred["source"] = "financialtimes"
+        temp_df = pd.concat([temp_df, ftimes_pred]).drop_duplicates().reset_index(drop=True)
 
     # check current combined file
     try:

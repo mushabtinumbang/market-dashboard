@@ -33,6 +33,12 @@ from src.utilities.utils import format_dates, read_yaml
     help="Define whether the user wants to run scraper for Economic Times or not. 'y' for yes and 'n' for no.",
 )
 @click.option(
+    "--financialtimes",
+    required=True,
+    type=str,
+    help="Define whether the user wants to run scraper for Economic Times or not. 'y' for yes and 'n' for no.",
+)
+@click.option(
     "--suffix",
     "-s",
     required=False,
@@ -59,6 +65,7 @@ def main_predict_sentiments(
     date,
     dailyfx,
     econtimes,
+    financialtimes,
     suffix,
     pipeline,
 ):
@@ -86,7 +93,8 @@ def main_predict_sentiments(
         scraper_params = params["run_scraper_pipeline_params"]
         scraper_params["date"] = format_dates(date)
         scraper_params["dailyfx"] = True if dailyfx == 'y' else False
-        scraper_params["econtimes"] = True if dailyfx == 'y' else False
+        scraper_params["econtimes"] = True if econtimes == 'y' else False
+        scraper_params["ftimes"] = True if financialtimes == 'y' else False
         scraper_params["suffix"] = suffix
 
         # run scraper
@@ -96,7 +104,8 @@ def main_predict_sentiments(
         # define parameters
         predict_params = params["run_prediction_pipeline_params"]
         predict_params["dailyfx"] = True if dailyfx == 'y' else False
-        predict_params["econtimes"] = True if dailyfx == 'y' else False
+        predict_params["econtimes"] = True if econtimes == 'y' else False
+        scraper_params["ftimes"] = True if financialtimes == 'y' else False
         predict_params["suffix"] = suffix
 
         # run prediction
@@ -106,7 +115,8 @@ def main_predict_sentiments(
         # define parameters
         combine_params = params["postprocess_data_params"]
         combine_params["dailyfx"] = True if dailyfx == 'y' else False
-        combine_params["econtimes"] = True if dailyfx == 'y' else False
+        combine_params["econtimes"] = True if econtimes == 'y' else False
+        scraper_params["ftimes"] = True if financialtimes == 'y' else False
 
         # run data postprocessings
         run_postprocess(**combine_params)

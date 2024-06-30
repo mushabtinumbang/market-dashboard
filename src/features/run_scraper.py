@@ -5,7 +5,7 @@ import os
 
 from datetime import datetime
 from loguru import logger
-from src.utilities.scraper import dailyforex, economictimes
+from src.utilities.scraper import dailyforex, economictimes, financialtimes
 from src.utilities.config_ import scrape_data_path, log_path
 import src.utilities.utils as utils
 
@@ -13,9 +13,11 @@ def run_scraper(
   date = ["01-01-2019"],      
   dailyfx = True,
   econtimes = True,
+  ftimes = True,
   suffix = 'new',
   dailyfx_out_feathername="dailyfx_.feather",
   econtimes_out_feathername="econtimes_.feather",
+  financialtimes_out_feathername="econtimes_.feather"
 ):
   """
   This is the main module to call the financial news scraper functions.
@@ -67,6 +69,27 @@ def run_scraper(
     utils.save(
       economictimes_df,
       os.path.join(scrape_data_path, econtimes_out_feathername)
+    )
+
+  if ftimes:
+    # Starting logger for Econ Times and show params
+    logger.info("Starting to scrape Financial Times ... \n")
+    logger.info(
+        "Financial Times Scraper Params- \n"
+        + f" Date: {formatted_date} |\n"
+        + f" File Output Suffix: {suffix} |\n"
+    )
+
+    # Run Scraper and save the result as df
+    logger.info("Running Scraper ... \n")
+    economictimes_df = financialtimes(date)
+
+    # Export Scrape result
+    logger.info("Performing Writeout for Economic Times ... \n")
+
+    utils.save(
+      economictimes_df,
+      os.path.join(scrape_data_path, financialtimes_out_feathername)
     )
 
 

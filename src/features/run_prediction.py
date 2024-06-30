@@ -13,11 +13,14 @@ import src.utilities.utils as utils
 def run_forecast( 
   dailyfx = True,
   econtimes = True,
+  ftimes = True,
   suffix = 'new',
   dailyfx_scrape_feathername= 'dailyfx_.feather',
   econtimes_scrape_feathername= 'econtimes_.feather',
+  financialtimes_scrape_feathername = 'financialtimes_.feather',
   dailyfx_out_feathername= 'dailyfx_result_.feather',
   econtimes_out_feathername= 'econtimes_result_.feather',
+  financialtimes_out_feathername = 'financialtimes_result_.feather',
   svm_model_filename = 'svm_model.pkl' , 
   vectorizer_filename= 'tfidf_vectorizer.pkl'
 ):
@@ -42,6 +45,7 @@ def run_forecast(
         logger.info(
             "DailyFX Forecasting Params- \n"
             + f" Input File Name: {dailyfx_scrape_feathername} |\n"
+             + f" File Output Suffix: {suffix} |\n"
         )
         
         # load feather
@@ -69,6 +73,7 @@ def run_forecast(
         logger.info(
             "Economic Times Forecasting Params- \n"
             + f" Input File Name: {econtimes_scrape_feathername} |\n"
+             + f" File Output Suffix: {suffix} |\n"
         )
         
         # load feather
@@ -88,6 +93,34 @@ def run_forecast(
         utils.save(
             econtimes_result,
             os.path.join(predicted_data_path, econtimes_out_feathername)
+        )
+
+    if ftimes:
+        # Starting logger for Financial Times and show params
+        logger.info("Starting to predict Financial Times feather ... \n")
+        logger.info(
+            "Financial Times Forecasting Params- \n"
+            + f" Input File Name: {financialtimes_scrape_feathername} |\n"
+             + f" File Output Suffix: {suffix} |\n"
+        )
+
+        # load feather
+        logger.info("Loading feather ... \n")
+        financialtimes_df = utils.load(os.path.join(scrape_data_path, financialtimes_scrape_feathername))
+
+        # run predict function
+        logger.info(f"Starting Prediction for {financialtimes_df.shape[0]} news ... \n")
+        financialtimes_result = utils.predict(
+            df=financialtimes_df,
+            loaded_svm_model=loaded_svm_model,
+            loaded_vectorizer=loaded_vectorizer
+        )
+
+        # writing out..
+        logger.info(f"Performing Writeout for Financial Times Prediction feather ... \n")
+        utils.save(
+            financialtimes_result,
+            os.path.join(predicted_data_path, financialtimes_out_feathername)
         )
 
 

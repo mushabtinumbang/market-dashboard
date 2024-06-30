@@ -11,15 +11,17 @@ Data Training:
 Data berita diperoleh dari dua sumber yang berbeda:
 1. [DailyFX](https://www.dailyfx.com) (Kategori: Forex)
 2. [The Economic Times](https://economictimes.indiatimes.com) (Kategori: Banking, Economy, Market, Forex)
+3. [Financial Times](https://www.ft.com/currencies) (Kategori: Currencies, Forex)
 
 
 ## Hasil Komparasi Algoritma Machine Learning:
 ----------------------------------------------
-| Algoritma    | Akurasi | Precision (avg) | Recall (avg) | F1-Score (avg) |
-|--------------|---------|-----------------|--------------|----------------|
-| Naive Bayes  | 0.735   | 0.73            | 0.74         | 0.72           |
-| SVM          | 0.774   | 0.78            | 0.77         | 0.76           |
-| TensorFlow   | 0.756   | 0.75            | 0.76         | 0.75           |
+| Algoritma         | Akurasi | Precision (avg) | Recall (avg) | F1-Score (avg) |
+|-------------------|---------|-----------------|--------------|----------------|
+| Naive Bayes       | 0.735   | 0.73            | 0.74         | 0.72           |
+| SVM               | 0.774   | 0.78            | 0.77         | 0.76           |
+| TensorFlow        | 0.756   | 0.75            | 0.76         | 0.75           |
+| Fine Tuned FinBERT| 0.854   | 0.85            | 0.85         | 0.85           |
 
 
 ## Penjelasan Hasil Komparasi:
