@@ -49,3 +49,25 @@ if True:
     with col1:
         stspace(1)
         st.write("## Market Dashboard")
+
+    # Add whitespace
+    stspace(3)
+
+    # Generate Tabs
+    listTabs = [
+    "Dashboard",
+    "Scrape & Train News"
+    ]
+
+    # Show tabs
+    selected = option_menu(None, listTabs, 
+        icons=['pie-chart', 'graph-up-arrow'], 
+        menu_icon="cast", default_index=0, orientation="horizontal")
+    
+    # Dashboard
+    if selected == "Dashboard":
+        spacecol, forexcol, volcol, datecol = st.columns((50, 6, 6, 12))
+        marketcol0, marketcol1 = st.columns((2, 3))
+        
+        with marketcol0:
+            st.write("### Overall Sentiment")
