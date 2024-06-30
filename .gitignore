@@ -158,3 +158,10 @@ __pycache__/
 
 # Ignore other IDEs
 *.vscode/
+
+# Ignore feather
+*.feather
+
+# Ignore logs
+logs/
+results/
