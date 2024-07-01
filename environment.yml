@@ -33,6 +33,8 @@ dependencies:
   - pyarrow==16.1.0
   - pyarrow-hotfix==0.6
   - regex==2024.5.15
+  - streamlit==1.36.0
+  - streamlit-option-menu==0.13.3
   - responses==0.18.0
   - safetensors==0.4.3
   - sympy==1.12.1
