@@ -21,12 +21,12 @@ Data berita diperoleh dari dua sumber yang berbeda:
 | Naive Bayes       | 0.735   | 0.73            | 0.74         | 0.72           |
 | SVM               | 0.774   | 0.78            | 0.77         | 0.76           |
 | TensorFlow        | 0.756   | 0.75            | 0.76         | 0.75           |
-| Fine Tuned FinBERT| 0.854   | 0.85            | 0.85         | 0.85           |
+| Fine Tuned FinBERT| 0.853   | 0.85            | 0.85         | 0.85           |
 
 
 ## Penjelasan Hasil Komparasi:
 
-Dalam proyek ini, kami menggunakan tiga algoritma machine learning yang berbeda untuk memprediksi sentimen pasar keuangan berdasarkan berita: Naive Bayes, Support Vector Machine (SVM), dan model TensorFlow. Berikut adalah penjelasan hasil komparasi dari ketiga algoritma tersebut:
+Dalam proyek ini, kami menggunakan empat algoritma machine learning yang berbeda untuk memprediksi sentimen pasar keuangan berdasarkan berita: Naive Bayes, Support Vector Machine (SVM), model TensorFlow, dan model Fine Tuned FinBERT. Berikut adalah penjelasan hasil komparasi dari keempat algoritma tersebut:
 
 1. **Naive Bayes:**
    - **Akurasi:** 0.735
@@ -51,6 +51,14 @@ SVM memberikan hasil terbaik di antara ketiga algoritma dengan akurasi, precisio
    - **F1-Score (avg):** 0.75
 
 Model TensorFlow menunjukkan performa yang kompetitif dengan SVM dan sedikit lebih baik dibandingkan dengan Naive Bayes. Model ini memberikan keseimbangan yang baik antara precision dan recall, membuatnya cocok untuk aplikasi yang memerlukan keseimbangan antara prediksi positif dan negatif yang benar.
+
+4. **Fine Tuned FinBERT:**
+   - **Akurasi:** 0.853
+   - **Precision (avg):** 0.85
+   - **Recall (avg):** 0.85
+   - **F1-Score (avg):** 0.85
+
+Fine Tuned FinBERT menunjukkan performa terbaik di antara semua algoritma yang diuji, dengan akurasi, precision, recall, dan f1-score yang paling tinggi. Model ini sangat efektif dalam menangani data dengan berbagai distribusi kelas dan menunjukkan kemampuan generalisasi yang sangat baik.
 
 Instalasi
 ============
