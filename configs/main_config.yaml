@@ -11,8 +11,6 @@ run_prediction_pipeline_params:
   dailyfx_out_feathername: 'dailyfx_result_{{suffix}}.feather'
   econtimes_out_feathername: 'econtimes_result_{{suffix}}.feather'
   financialtimes_out_feathername: 'financialtimes_result_{{suffix}}.feather'
-  svm_model_filename: 'svm_model.pkl'
-  vectorizer_filename: 'tfidf_vectorizer.pkl'
 
 postprocess_data_params:
   dailyfx_pred_feathername: 'dailyfx_result_{{suffix}}.feather'

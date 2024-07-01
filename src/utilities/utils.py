@@ -5,6 +5,7 @@ import feather
 import gzip
 import yaml
 import os 
+import torch
 
 from datetime import datetime
 from jinja2 import Template
@@ -153,3 +154,43 @@ def read_yaml(filename, render=False, **kwargs):
     return config
 
 
+def predict_with_finbert(
+        df,
+        loaded_model,
+        loaded_tokenizer,
+        batch_size=32
+):
+    # New text data to predict
+    titles = list(df['title'])
+
+    # Move model to the appropriate device (e.g., CPU or GPU)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    loaded_model.to(device)
+
+    # Initialize an empty list to store predictions
+    all_predictions = []
+
+    # Process data in batches
+    for i in range(0, len(titles), batch_size):
+        batch_titles = titles[i:i + batch_size]
+        
+        # Tokenize the new text
+        inputs = loaded_tokenizer(batch_titles, padding='max_length', truncation=True, max_length=64, return_tensors="pt")
+        inputs = {key: value.to(device) for key, value in inputs.items()}
+        
+        # Make predictions
+        loaded_model.eval()
+        with torch.no_grad():
+            outputs = loaded_model(**inputs)
+            logits = outputs.logits
+            predictions = torch.argmax(logits, dim=-1)
+        
+        # Convert predictions to labels
+        int_to_label = {0: 'positive', 1: 'neutral', 2: 'negative'}
+        predicted_labels = [int_to_label[pred.item()] for pred in predictions]
+        all_predictions.extend(predicted_labels)
+
+    # Add the predictions to the dataframe
+    df["label"] = all_predictions
+    
+    return df

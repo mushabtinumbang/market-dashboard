@@ -6,6 +6,7 @@ root_path = Path(__file__).parent.parent.parent.resolve()
 config_path = root_path / "configs"
 img_path = root_path / "img"
 model_path = root_path / "model"
+finbert_model_path = model_path / "finbert"
 train_data_path = root_path / "data" / "train"
 scrape_data_path = root_path / "data" / "scrape"
 predicted_data_path = root_path / "data" / "predicted"

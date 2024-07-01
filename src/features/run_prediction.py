@@ -6,8 +6,9 @@ import joblib
 
 from datetime import datetime
 from loguru import logger
+from transformers import BertTokenizer, BertForSequenceClassification
 from src.utilities.scraper import dailyforex, economictimes
-from src.utilities.config_ import scrape_data_path, model_path, predicted_data_path
+from src.utilities.config_ import scrape_data_path, model_path, predicted_data_path, finbert_model_path
 import src.utilities.utils as utils 
 
 def run_forecast( 
@@ -20,22 +21,20 @@ def run_forecast(
   financialtimes_scrape_feathername = 'financialtimes_.feather',
   dailyfx_out_feathername= 'dailyfx_result_.feather',
   econtimes_out_feathername= 'econtimes_result_.feather',
-  financialtimes_out_feathername = 'financialtimes_result_.feather',
-  svm_model_filename = 'svm_model.pkl' , 
-  vectorizer_filename= 'tfidf_vectorizer.pkl'
+  financialtimes_out_feathername = 'financialtimes_result_.feather'
 ):
     """
     This is the main module to predict previously scraped financial news..
-    We will only be using SVM method since this is the best algorithm experimented for now. 
+    We will only be using FinBERT model since this is the best algorithm experimented for now. 
     """
     
-    # Load TFIDF
-    logger.info("Loading SVM Model ... \n")
-    loaded_svm_model = joblib.load(os.path.join(model_path, svm_model_filename))
+    # Load the model
+    logger.info("Loading FinBERT Model ... \n")
+    finbert_model = BertForSequenceClassification.from_pretrained(finbert_model_path)
 
-    # Load the saved TF-IDF vectorizer
-    logger.info("Loading Model Vectorizer ... \n")
-    loaded_vectorizer = joblib.load(os.path.join(model_path, vectorizer_filename))
+    # Load the tokenizer
+    logger.info("Loading FinBERT Tokenizer ... \n")
+    finbert_tokenizer = BertTokenizer.from_pretrained(finbert_model_path)
 
     # Run Prediction
     
@@ -54,10 +53,10 @@ def run_forecast(
 
         # run predict function
         logger.info(f"Starting Prediction for {dailyfx_df.shape[0]} news ... \n")
-        dailyfx_result = utils.predict(
+        dailyfx_result = utils.predict_with_finbert(
             df=dailyfx_df,
-            loaded_svm_model=loaded_svm_model,
-            loaded_vectorizer=loaded_vectorizer
+            loaded_model=finbert_model,
+            loaded_tokenizer=finbert_tokenizer
         )
 
         # writing out..
@@ -82,10 +81,10 @@ def run_forecast(
 
         # run predict function
         logger.info(f"Starting Prediction for {econtimes_df.shape[0]} news ... \n")
-        econtimes_result = utils.predict(
+        econtimes_result = utils.predict_with_finbert(
             df=econtimes_df,
-            loaded_svm_model=loaded_svm_model,
-            loaded_vectorizer=loaded_vectorizer
+            loaded_model=finbert_model,
+            loaded_tokenizer=finbert_tokenizer
         )
 
         # writing out..
@@ -110,10 +109,10 @@ def run_forecast(
 
         # run predict function
         logger.info(f"Starting Prediction for {financialtimes_df.shape[0]} news ... \n")
-        financialtimes_result = utils.predict(
+        financialtimes_result = utils.predict_with_finbert(
             df=financialtimes_df,
-            loaded_svm_model=loaded_svm_model,
-            loaded_vectorizer=loaded_vectorizer
+            loaded_model=finbert_model,
+            loaded_tokenizer=finbert_tokenizer
         )
 
         # writing out..
