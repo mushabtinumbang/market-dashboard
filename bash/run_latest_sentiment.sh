@@ -1,3 +1,4 @@
+# Bash Template
 export DATE='latest' &&
 export DAILYFX='y' &&
 export ECONTIMES='y' &&
