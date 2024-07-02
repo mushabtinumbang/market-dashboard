@@ -11,7 +11,12 @@ import src.utilities.utils as utils
 from datetime import datetime
 from src.utilities.config_ import combined_data_path
 from transformers import BertTokenizer, BertForSequenceClassification
-from src.utilities.config_ import finbert_model_path
+from src.features.run_scraper import run_scraper
+from src.features.run_prediction import run_forecast
+from src.features.postprocess_data import run_postprocess
+from src.utilities.config_ import finbert_model_path, config_path, log_path
+from src.utilities.utils import format_dates, read_yaml
+from streamlit_calendar import calendar
 
 # Chart Variables
 quadrant_colors = ["#2bad4e", "#eff229", "#f25829"]  
@@ -170,3 +175,166 @@ def predict_with_finbert(
         all_predictions.extend(predicted_labels)
 
     return all_predictions
+
+def display_news(filtered_df, start_idx, end_idx):
+    for index, row in filtered_df[start_idx:end_idx].iterrows():
+        title = row['title']
+        date = row['date']
+        url = row['url']
+        category = row['category']
+        label = row['label']
+        source = row['source']
+
+        color = {
+            "negative": "red",
+            "positive": "limegreen",
+            "neutral": "blue"
+        }.get(label.lower(), "black")
+
+        st.markdown(f'<span style="color:{color};">{label.capitalize()}</span>', unsafe_allow_html=True)
+        st.markdown(f"##### <a href='{url}' style='color:black; font-size:20px;'>{title}</a>", unsafe_allow_html=True)
+        st.write(f'###### Source: {source.capitalize()}. Category: {category.capitalize()}. Date: {date.strftime("%d-%m-%Y")}')
+        stspace(2)
+
+def get_min_max_date_by_source(df):
+    # Initialize a dictionary to store the results
+    min_max_dates = {}
+
+    # List of sources to process
+    sources = ["dailyfx", "econtimes", "financialtimes"]
+
+    # Loop through each source to filter the DataFrame and get min and max dates
+    for source in sources:
+        source_df = df[df["source"] == source].reset_index(drop=True)
+        if not source_df.empty:
+            min_date = (source_df.date.min()).strftime('%Y-%m-%d')
+            max_date = (source_df.date.max() + pd.Timedelta(days=1)).strftime('%Y-%m-%d')
+        else:
+            min_date, max_date = None, None
+        min_max_dates[source] = (min_date, max_date)
+
+    # Extract the results for each source
+    dailyfx_min, dailyfx_max = min_max_dates["dailyfx"]
+    econtimes_min, econtimes_max = min_max_dates["econtimes"]
+    financialtimes_min, financialtimes_max = min_max_dates["financialtimes"]
+
+    return dailyfx_min, dailyfx_max, econtimes_min, econtimes_max, financialtimes_min, financialtimes_max
+
+def create_calendar(
+        DATE_VIEW,
+        dailyfx_min, 
+        dailyfx_max, 
+        econtimes_min, 
+        econtimes_max, 
+        financialtimes_min, 
+        financialtimes_max
+):
+    calendar_options = {
+        "editable": "false",
+        "navLinks": "false",
+        "resources": "",
+        "selectable": "true",
+        "headerToolbar": {
+            "left": "today prev,next",
+            "center": "title",
+            "right": "dayGridDay,dayGridWeek,dayGridMonth",
+        },
+        "initialDate": f"{DATE_VIEW}",
+        "initialView": "dayGridMonth",
+    }
+    calendar_events = [
+        {
+            "title": "DailyFX",
+            "start": f"{dailyfx_min}",
+            "end": f"{dailyfx_max}",
+            "resourceId": "a",
+            "color": "#FF4B4B",
+        }, 
+        {
+            "title": "Economic Times",
+            "start": f"{econtimes_min}",
+            "end": f"{econtimes_max}",
+            "resourceId": "b",
+            "color": "#3DD56D",
+        },
+        {
+            "title": "Financial Times",
+            "start": f"{financialtimes_min}",
+            "end": f"{financialtimes_max}",
+            "resourceId": "c",
+        }
+    ]
+    custom_css = f"""
+        .fc-event-past {{
+            opacity: 0.8;
+        }}
+        .fc-event-time {{
+            font-style: italic;
+        }}
+        .fc-event-title {{
+            font-weight: 700;
+        }}
+        .fc-toolbar-title {{
+            font-size: 2rem;
+        }}
+        .calendar-container {{
+            width: 20%;
+            height: 200px;
+        }}
+    """
+
+    return calendar(events=calendar_events, options=calendar_options, custom_css=custom_css)
+
+def run_scrape_streamlit(date, dailyfx, econtimes, financialtimes, suffix= "streamlit"):
+    # load some config
+    params = read_yaml(
+        os.path.join(config_path, "main_config.yaml"), render=True, suffix=suffix
+    )
+
+    # define parameters
+    scraper_params = params["run_scraper_pipeline_params"]
+    scraper_params["date"] = format_dates(date)
+    scraper_params["dailyfx"] = dailyfx
+    scraper_params["econtimes"] = econtimes
+    scraper_params["ftimes"] = financialtimes
+    scraper_params["suffix"] = suffix
+
+    # run scraper
+    run_scraper(**scraper_params)
+
+    return True
+
+def run_predict_streamlit(date, dailyfx, econtimes, financialtimes, suffix= "streamlit"):
+    # load some config
+    params = read_yaml(
+        os.path.join(config_path, "main_config.yaml"), render=True, suffix=suffix
+    )
+
+    # define parameters
+    predict_params = params["run_prediction_pipeline_params"]
+    predict_params["dailyfx"] = dailyfx
+    predict_params["econtimes"] = econtimes
+    predict_params["ftimes"] = financialtimes
+    predict_params["suffix"] = suffix
+
+    # run scraper
+    run_forecast(**predict_params)
+
+    return True
+
+def run_postprocess_streamlit(date, dailyfx, econtimes, financialtimes, suffix= "streamlit"):
+    # load some config
+    params = read_yaml(
+        os.path.join(config_path, "main_config.yaml"), render=True, suffix=suffix
+    )
+
+    # define parameters
+    combine_params = params["postprocess_data_params"]
+    combine_params["dailyfx"] = dailyfx
+    combine_params["econtimes"] = econtimes
+    combine_params["ftimes"] = financialtimes
+
+    # run data postprocessings
+    run_postprocess(**combine_params)
+
+    return True
