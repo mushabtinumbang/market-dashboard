@@ -105,7 +105,7 @@ def main_predict_sentiments(
         predict_params = params["run_prediction_pipeline_params"]
         predict_params["dailyfx"] = True if dailyfx == 'y' else False
         predict_params["econtimes"] = True if econtimes == 'y' else False
-        scraper_params["ftimes"] = True if financialtimes == 'y' else False
+        predict_params["ftimes"] = True if financialtimes == 'y' else False
         predict_params["suffix"] = suffix
 
         # run prediction
@@ -116,7 +116,7 @@ def main_predict_sentiments(
         combine_params = params["postprocess_data_params"]
         combine_params["dailyfx"] = True if dailyfx == 'y' else False
         combine_params["econtimes"] = True if econtimes == 'y' else False
-        scraper_params["ftimes"] = True if financialtimes == 'y' else False
+        combine_params["ftimes"] = True if financialtimes == 'y' else False
 
         # run data postprocessings
         run_postprocess(**combine_params)

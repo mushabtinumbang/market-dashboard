@@ -111,45 +111,48 @@ def economictimes(
 
     return final_df
 
-def financialtimes(
-        date
-):
+def financialtimes(date):
     base_url, data, i, scrape = "https://www.ft.com/currencies?page=" , {"title" : [], "date" : [], "url" : [], "category" : []}, 1, True
     
     if len(date) == 2:
-        date_start, date_end = date[0], date[1]
-
+        date_start, date_end = date[0], (date[1] + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
     else:
         date_start = date[0].replace(hour=0, minute=0, second=0, microsecond=0)
         date_end = (date_start + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
-    
+
     while scrape:
         url = f"{base_url}{i}"
         html_text = requests.get(url).text
         soup = BeautifulSoup(html_text, 'lxml')
-        all_titles = soup.find_all('li', class_ = 'o-teaser-collection__item o-grid-row')
+        all_titles = soup.find_all('li', class_='o-teaser-collection__item o-grid-row')
 
         for title in all_titles:
             try:
                 # find data
-                date = datetime.strptime(title.find('time', class_='o-date').get_text(), '%A, %d %B, %Y')
+                date_text = title.find('time', class_='o-date').get_text()
+                date = datetime.strptime(date_text, '%A, %d %B, %Y')
 
-                # check whether the data is expected or not, if not then break.
-                if not date_start <= date <= date_end:
+                # if the date is earlier than date_start, stop scraping
+                if date < date_start:
                     scrape = False
                     break
+                
+                # if the date is within the range, scrape the data
+                if date_start <= date <= date_end:
+                    category = title.find('a', class_='o-teaser__tag').get_text()
+                    title_div = title.find('a', class_='js-teaser-heading-link')
+                    title_url = f"ft.com{title_div.get('href')}"
+                    header = title_div.get_text()
 
-                # find data      
-                category = title.find('a', class_='o-teaser__tag').get_text()
-                title_div = title.find('a', class_='js-teaser-heading-link')
-                title_url = f"ft.com{title_div.get('href')}"
-                header = title_div.get_text()
-
-                # append data
-                data["title"].append(header)
-                data["date"].append(date.strftime('%d-%m-%Y'))
-                data["url"].append(title_url)
-                data["category"].append(category)
+                    # append data
+                    data["title"].append(header)
+                    data["date"].append(date.strftime('%d-%m-%Y'))
+                    data["url"].append(title_url)
+                    data["category"].append(category)
+                
+                # if the date is later than date_end, continue to next title
+                else:
+                    continue
 
             except AttributeError as e:
                 pass
