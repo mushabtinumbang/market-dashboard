@@ -9,7 +9,7 @@ from src.utilities.streamlit import *
 from streamlit_option_menu import option_menu
 from datetime import datetime, timedelta
 
-from src.utilities.config_ import finbert_model_path
+from src.utilities.config_ import distilbert_model_path
 from streamlit_calendar import calendar
 
 # Set Layout Config
@@ -50,16 +50,16 @@ if True:
          df = st.session_state.df
 
     # Cache Model & Tokenizer
-    if "finbert_model" not in st.session_state:
-        finbert_model = get_finbert_model()
-        finbert_tokenizer = get_finbert_tokenizer()
-        st.session_state.finbert_model = finbert_model
-        st.session_state.finbert_tokenizer = finbert_tokenizer
+    if "distilbert_model" not in st.session_state:
+        distilbert_model = get_distilbert_model()
+        distilbert_tokenizer = get_distilbert_tokenizer()
+        st.session_state.distilbert_model = distilbert_model
+        st.session_state.distilbert_tokenizer = distilbert_tokenizer
 
     # Get From Cache
     else:
-         finbert_model = st.session_state.finbert_model
-         finbert_tokenizer = st.session_state.finbert_tokenizer
+         distilbert_model = st.session_state.distilbert_model
+         distilbert_tokenizer = st.session_state.distilbert_tokenizer
 
     # Make a Centered Text
     col1, col2, col3 = st.columns((14, 6, 6))
@@ -175,14 +175,14 @@ if True:
             st.write("### Predict News Headline Sentiment")
         
         # Create input widget
-        finbert_input = st.text_input("Input News Headline to Predict Sentiment", "")
+        distilbert_input = st.text_input("Input News Headline to Predict Sentiment", "")
 
-        if finbert_input:
+        if distilbert_input:
             # Predict the input
-            finbert_output = predict_with_finbert(finbert_input, finbert_model, finbert_tokenizer)
+            distilbert_output = predict_with_distilbert(distilbert_input, distilbert_model, distilbert_tokenizer)
 
             # Show
-            st.write(f"###### Predicted Sentiment: {finbert_output[0]}")
+            st.write(f"###### Predicted Sentiment: {distilbert_output[0]}")
         
         # Setup size formatting
         len_filtered_df = filtered_df.shape[0]
@@ -294,17 +294,17 @@ if True:
                     st.error('Scraping Failed', icon="🚨")
     
                 # Log
-                st.info(f"Predicting Sentiment with FinBert for {', '.join(selected_sources) if selected_sources else 'None'}", icon="ℹ️")
+                st.info(f"Predicting Sentiment with DistilBERT for {', '.join(selected_sources) if selected_sources else 'None'}", icon="ℹ️")
                 
                 # Start Predidct
                 predict_success = run_predict_streamlit(date=train_date, dailyfx=dailyfx_option, econtimes=econtimes_option, financialtimes=financialtimes_option)
 
                 # Log success
                 if predict_success:
-                    st.success('Predict Sentiment with FinBERT Success!', icon="✅")
+                    st.success('Predict Sentiment with DistilBERT Success!', icon="✅")
 
                 else:
-                    st.error('Predict Sentimnet with FinBert Failed', icon="🚨")
+                    st.error('Predict Sentimnet with DistilBERT Failed', icon="🚨")
 
                 # Another logs
                 st.info(f"Starting Postprocessing Steps for {', '.join(selected_sources) if selected_sources else 'None'}", icon="ℹ️")
