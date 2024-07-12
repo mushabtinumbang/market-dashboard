@@ -18,47 +18,10 @@ Data berita diperoleh dari dua sumber yang berbeda:
 ----------------------------------------------
 | Algoritma         | Akurasi | Precision (avg) | Recall (avg) | F1-Score (avg) |
 |-------------------|---------|-----------------|--------------|----------------|
-| Naive Bayes       | 0.735   | 0.73            | 0.74         | 0.72           |
-| SVM               | 0.774   | 0.78            | 0.77         | 0.76           |
-| TensorFlow        | 0.756   | 0.75            | 0.76         | 0.75           |
-| Fine Tuned FinBERT| 0.853   | 0.85            | 0.85         | 0.85           |
+| Naive Bayes       | 0.702   | 0.69            | 0.70         | 0.69           |
+| SVM               | 0.753   | 0.75            | 0.75         | 0.73           |
+| Fine Tuned DistilBERT| 0.854   | 0.85            | 0.85         | 0.85           |
 
-
-## Penjelasan Hasil Komparasi:
-
-Dalam proyek ini, kami menggunakan empat algoritma machine learning yang berbeda untuk memprediksi sentimen pasar keuangan berdasarkan berita: Naive Bayes, Support Vector Machine (SVM), model TensorFlow, dan model Fine Tuned FinBERT. Berikut adalah penjelasan hasil komparasi dari keempat algoritma tersebut:
-
-1. **Naive Bayes:**
-   - **Akurasi:** 0.735
-   - **Precision (avg):** 0.73
-   - **Recall (avg):** 0.74
-   - **F1-Score (avg):** 0.72
-
-Naive Bayes menunjukkan performa yang baik dalam hal akurasi dan recall, namun memiliki f1-score yang sedikit lebih rendah dibandingkan dengan SVM dan TensorFlow. Algoritma ini cocok untuk digunakan pada data dengan distribusi kelas yang seimbang.
-
-2. **SVM (Support Vector Machine):**
-   - **Akurasi:** 0.774
-   - **Precision (avg):** 0.78
-   - **Recall (avg):** 0.77
-   - **F1-Score (avg):** 0.76
-
-SVM memberikan hasil terbaik di antara ketiga algoritma dengan akurasi, precision, recall, dan f1-score yang lebih tinggi. Algoritma ini sangat efektif dalam menangani data dengan kelas yang tidak seimbang dan menunjukkan kemampuan generalisasi yang baik.
-
-3. **TensorFlow:**
-   - **Akurasi:** 0.756
-   - **Precision (avg):** 0.75
-   - **Recall (avg):** 0.76
-   - **F1-Score (avg):** 0.75
-
-Model TensorFlow menunjukkan performa yang kompetitif dengan SVM dan sedikit lebih baik dibandingkan dengan Naive Bayes. Model ini memberikan keseimbangan yang baik antara precision dan recall, membuatnya cocok untuk aplikasi yang memerlukan keseimbangan antara prediksi positif dan negatif yang benar.
-
-4. **Fine Tuned FinBERT:**
-   - **Akurasi:** 0.853
-   - **Precision (avg):** 0.85
-   - **Recall (avg):** 0.85
-   - **F1-Score (avg):** 0.85
-
-Fine Tuned FinBERT menunjukkan performa terbaik di antara semua algoritma yang diuji, dengan akurasi, precision, recall, dan f1-score yang paling tinggi. Model ini sangat efektif dalam menangani data dengan berbagai distribusi kelas dan menunjukkan kemampuan generalisasi yang sangat baik.
 
 Instalasi
 ============
@@ -73,6 +36,7 @@ $ cd market-dashboard
 Langkah selanjutnya untuk menjalakan program ini adalah untuk membuat environment conda. Hal ini bertujuan untuk memastikan semua dependensi dan library yang dipakai nantinya menggunakan versi yang sama dan tidak menghasilkan sebuah error. Untuk menginstal environment, user dapat menjalankan script ini pada terminal.
 ```bash
 $ make create-env
+$ conda activate market-dash
 ```
 
 
