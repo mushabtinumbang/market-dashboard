@@ -62,10 +62,11 @@ Setelah scraping, pengguna juga bisa langsung memprediksi sentimen dari berita-b
 Berdasarkan parameter-parameter yang ada, pengguna dapat mengubah tanggal, mengatur laman berita untuk scraping, hingga mengatur pipeline yang akan dijalankan nantinya. Berikut adalah contoh script yang dapat dijalankan.
 
 ```bash
-$ export DATE='01-06-2024|30-06-2024' &&
+$ export DATE='29-06-2024|12-07-2024' &&
 export DAILYFX='y' &&
 export ECONTIMES='y' &&
-export SUFFIX='' &&
+export FINANCIALTIMES='y' &&
+export SUFFIX='test' &&
 export RUN_SCRAPER='y' &&
 export RUN_PREDICTION='y' &&
 export PREPARE_STREAMLIT='y' &&
