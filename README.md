@@ -54,6 +54,7 @@ Setelah scraping, pengguna juga bisa langsung memprediksi sentimen dari berita-b
 | DATE            | Menentukan periode data yang ingin diproses. Contoh: 'latest' atau jika ingin rentang tanggal, masukkan seperti ini: "2020-01-02\|2020-01-03" (beberapa tanggal dipisahkan dengan \|). |
 | DAILYFX         | Menentukan apakah ingin melakukan scraping dari DailyFX atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
 | ECONTIMES       | Menentukan apakah ingin melakukan scraping dari Economic Times atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
+| FINANCIALTIMES       | Menentukan apakah ingin melakukan scraping dari Financial Times atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
 | SUFFIX          | Menentukan akhiran nama file output. |
 | RUN_SCRAPER     | Menentukan apakah ingin menjalankan fungsi scraper atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
 | RUN_PREDICTION  | Menentukan apakah ingin menjalankan prediksi menggunakan model machine learning atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
