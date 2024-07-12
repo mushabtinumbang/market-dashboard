@@ -6,9 +6,8 @@ import joblib
 
 from datetime import datetime
 from loguru import logger
-from transformers import BertTokenizer, BertForSequenceClassification
-from src.utilities.scraper import dailyforex, economictimes
-from src.utilities.config_ import scrape_data_path, model_path, predicted_data_path, finbert_model_path
+from transformers import DistilBertForSequenceClassification, DistilBertTokenizer
+from src.utilities.config_ import scrape_data_path, predicted_data_path, distilbert_model_path
 import src.utilities.utils as utils 
 
 def run_forecast( 
@@ -25,19 +24,19 @@ def run_forecast(
 ):
     """
     This is the main module to predict previously scraped financial news..
-    We will only be using FinBERT model since this is the best algorithm experimented for now. 
+    We will only be using DistilBERT model since this is the best algorithm experimented for now. 
     """
     
     # Load the model
-    logger.info("Loading FinBERT Model ... \n")
-    finbert_model = BertForSequenceClassification.from_pretrained(finbert_model_path)
+    logger.info("Loading DistilBERT Model ... \n")
+    distilbert_model = DistilBertForSequenceClassification.from_pretrained(distilbert_model_path)
 
     # Load the tokenizer
-    logger.info("Loading FinBERT Tokenizer ... \n")
-    finbert_tokenizer = BertTokenizer.from_pretrained(finbert_model_path)
+    logger.info("Loading DistilBERT Tokenizer ... \n")
+    distilbert_tokenizer = DistilBertTokenizer.from_pretrained(distilbert_model_path)
 
-    # Run Prediction
-    
+
+    # Run Prediction    
     if dailyfx:
         # Starting logger for Daily Forex and show params
         logger.info("Starting to predict Daily Forex feather ... \n")
@@ -53,10 +52,10 @@ def run_forecast(
 
         # run predict function
         logger.info(f"Starting Prediction for {dailyfx_df.shape[0]} news ... \n")
-        dailyfx_result = utils.predict_with_finbert(
+        dailyfx_result = utils.predict_with_distilbert(
             df=dailyfx_df,
-            loaded_model=finbert_model,
-            loaded_tokenizer=finbert_tokenizer
+            loaded_model=distilbert_model,
+            loaded_tokenizer=distilbert_tokenizer
         )
 
         # writing out..
@@ -81,10 +80,10 @@ def run_forecast(
 
         # run predict function
         logger.info(f"Starting Prediction for {econtimes_df.shape[0]} news ... \n")
-        econtimes_result = utils.predict_with_finbert(
+        econtimes_result = utils.predict_with_distilbert(
             df=econtimes_df,
-            loaded_model=finbert_model,
-            loaded_tokenizer=finbert_tokenizer
+            loaded_model=distilbert_model,
+            loaded_tokenizer=distilbert_tokenizer
         )
 
         # writing out..
@@ -109,10 +108,10 @@ def run_forecast(
 
         # run predict function
         logger.info(f"Starting Prediction for {financialtimes_df.shape[0]} news ... \n")
-        financialtimes_result = utils.predict_with_finbert(
+        financialtimes_result = utils.predict_with_distilbert(
             df=financialtimes_df,
-            loaded_model=finbert_model,
-            loaded_tokenizer=finbert_tokenizer
+            loaded_model=distilbert_model,
+            loaded_tokenizer=distilbert_tokenizer
         )
 
         # writing out..

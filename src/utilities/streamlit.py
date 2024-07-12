@@ -10,11 +10,11 @@ import src.utilities.utils as utils
 
 from datetime import datetime
 from src.utilities.config_ import combined_data_path
-from transformers import BertTokenizer, BertForSequenceClassification
+from transformers import DistilBertForSequenceClassification, DistilBertTokenizer
 from src.features.run_scraper import run_scraper
 from src.features.run_prediction import run_forecast
 from src.features.postprocess_data import run_postprocess
-from src.utilities.config_ import finbert_model_path, config_path, log_path
+from src.utilities.config_ import distilbert_model_path, config_path, log_path
 from src.utilities.utils import format_dates, read_yaml
 from streamlit_calendar import calendar
 
@@ -36,13 +36,13 @@ def getdata():
     df = utils.load(os.path.join(combined_data_path, 'combined_data.feather'))
     return df
 
-def get_finbert_model():
-    finbert_model = BertForSequenceClassification.from_pretrained(finbert_model_path)
-    return finbert_model
+def get_distilbert_model():
+    distilbert_model = DistilBertForSequenceClassification.from_pretrained(distilbert_model_path)
+    return distilbert_model
 
-def get_finbert_tokenizer():
-    finbert_tokenizer = BertTokenizer.from_pretrained(finbert_model_path)
-    return finbert_tokenizer
+def get_distilbert_tokenizer():
+    distilbert_tokenizer = DistilBertTokenizer.from_pretrained(distilbert_model_path)
+    return distilbert_tokenizer
 
 def create_gauge_chart(current_value):
     # Configuration for the gauge chart
@@ -138,7 +138,7 @@ def get_total_unique_sources(df):
     
     return total_dailyfx, total_econtimes, total_financialtimes
 
-def predict_with_finbert(
+def predict_with_distilbert(
         text,
         loaded_model,
         loaded_tokenizer,

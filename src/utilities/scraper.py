@@ -11,7 +11,8 @@ from src.utilities.utils import format_dates, date_to_integer
 def dailyforex(
         date
 ):
-    base_url, data = "https://www.dailyfx.com/archive/" , {"title" : [], "date" : [], "url" : [], "category" : []}
+    base_url = "https://www.dailyfx.com/archive/"
+    data = {"title" : [], "date" : [], "url" : [], "category" : []}
     
     month_start, year_start = date[0].month, date[0].year
 
@@ -19,10 +20,13 @@ def dailyforex(
         month_end, year_end = month_start + 1, year_start + 1
 
     else:
-        month_end = month_start + 1 if (date[1].month == month_start) else date[1].month + 1
-        year_end = year_start + 1 if (date[1].year == year_start) else date[1].year + 1
+        month_end = month_start + 1 if (
+            date[1].month == month_start) else date[1].month + 1
+        
+        year_end = year_start + 1 if (
+            date[1].year == year_start) else date[1].year + 1
 
-    # Loop over the years from 2019 to 2023
+    # Loop over the start and end date
     for year in range(year_start, year_end):
         # Loop over the months from January to November
         for month in range(month_start, month_end):
@@ -37,7 +41,9 @@ def dailyforex(
             
             for j in titles:
                 urls = j.find_all('a')
-                date = datetime.strptime(j.find('h2', class_ = 'text-black dfx-h-3').text, "%d %B, %Y (%A)").strftime("%d-%m-%Y")
+                date = datetime.strptime(j.find('h2', 
+                                        class_ = 'text-black dfx-h-3').
+                                        text, "%d %B, %Y (%A)").strftime("%d-%m-%Y")
                 news = j.find_all("span", class_ = 'dfx-articleListItem__title')
                 headlines, category = [], "forex"
 
@@ -54,14 +60,9 @@ def dailyforex(
     return final_df
 
 
-def economictimes(
-        date
-):
+def economictimes(date):
     # Parameters
-    base_url, data = "https://www.wsj.com/news/archive/" , {"title" : [], "date" : [], "url" : [], "category" : []}
-    HEADERS = {
-    'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
-    }
+    data = {"title" : [], "date" : [], "url" : [], "category" : []}
 
     # Get Integers from Date
     date_integers = date_to_integer(date)
@@ -76,7 +77,7 @@ def economictimes(
 
     for index in range(start, end + 1):
         url = f'https://economictimes.indiatimes.com/archivelist/starttime-{index}.cms'
-        response = requests.get(url, headers=HEADERS).text
+        response = requests.get(url).text
         soup = BeautifulSoup(response, 'lxml')
         cols = soup.find_all('ul', class_='content')
         date_obj = soup.find('td', class_ = 'contentbox5').find_all('b')[1].text
@@ -112,7 +113,8 @@ def economictimes(
     return final_df
 
 def financialtimes(date):
-    base_url, data, i, scrape = "https://www.ft.com/currencies?page=" , {"title" : [], "date" : [], "url" : [], "category" : []}, 1, True
+    base_url= "https://www.ft.com/currencies?page=" 
+    data, i, scrape = {"title" : [], "date" : [], "url" : [], "category" : []}, 1, True
     
     if len(date) == 2:
         date_start, date_end = date[0], (date[1] + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)

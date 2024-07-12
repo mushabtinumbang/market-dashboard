@@ -154,7 +154,7 @@ def read_yaml(filename, render=False, **kwargs):
     return config
 
 
-def predict_with_finbert(
+def predict_with_distilbert(
         df,
         loaded_model,
         loaded_tokenizer,
