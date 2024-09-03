@@ -27,9 +27,12 @@ Instalasi
 ============
 ### Clone Repositori
 -----------
+Pastikan anda telah menginstall git lfs (Large File Storage) untuk dapat melakukan git clone pada model Machine Learning.
 ```bash
 $ git clone https://github.com/mushabtinumbang/market-dashboard.git
 $ cd market-dashboard
+$ git lfs install
+$ git lfs pull
 ```
 ### Membuat Environment
 -----------
