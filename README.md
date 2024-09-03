@@ -39,7 +39,7 @@ $ git lfs pull
 Langkah selanjutnya untuk menjalakan program ini adalah untuk membuat environment conda. Hal ini bertujuan untuk memastikan semua dependensi dan library yang dipakai nantinya menggunakan versi yang sama dan tidak menghasilkan sebuah error. Untuk menginstal environment, user dapat menjalankan script ini pada terminal.
 ```bash
 $ make create-env
-$ conda activate market-dash
+$ conda activate market-sentiment-DistilBERT
 ```
 
 
