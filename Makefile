@@ -21,3 +21,11 @@ predict-sentiments:
 
 run-streamlit:
 	$(STREAMLIT) run app.py
+
+scrape-investing:
+	$(PYTHON) -m src.scripts.selenium_investing --date='$(DATE)' --suffix='$(SUFFIX)'
+
+# Run Main Predict Pipeline
+predict-stocks:
+	$(PYTHON) -m src.main.main_predict_stock --date='$(DATE)' --stock='$(STOCK)' --suffix='$(SUFFIX)' --pipeline=$(RUN_SCRAPER)  --pipeline=$(RUN_SUMMARIZER) --pipeline=$(RUN_PREDICTION)  --pipeline=$(PREPARE_STREAMLIT) 
+
