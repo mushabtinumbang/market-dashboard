@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from src.utilities.utils import read_yaml
+import src.utilities.utils as utils
 # Paths
 root_path = Path(__file__).parent.parent.parent.resolve()
 config_path = root_path / "configs"
@@ -23,4 +23,4 @@ class ConfigManager(object):
 
     def __init__(self, config_file="main_config.yaml"):
         # load main_config
-        self.params = read_yaml(os.path.join(config_path, "main_config.yaml"))
+        self.params = utils.read_yaml(os.path.join(config_path, "main_config.yaml"))
