@@ -11,10 +11,11 @@ import src.utilities.utils as utils
 from datetime import datetime
 from src.utilities.config_ import combined_data_path
 from transformers import DistilBertForSequenceClassification, DistilBertTokenizer
+from transformers import BartForConditionalGeneration, BartTokenizer
 from src.features.run_scraper import run_scraper
 from src.features.run_prediction import run_forecast
 from src.features.postprocess_data import run_postprocess
-from src.utilities.config_ import distilbert_model_path, config_path, log_path
+from src.utilities.config_ import distilbert_model_path, config_path, log_path, model_path
 from src.utilities.utils import format_dates, read_yaml
 from streamlit_calendar import calendar
 
@@ -110,6 +111,9 @@ def filter_df_by_date(df, start_date, end_date):
     
     return filtered_df
 
+def filter_df_by_stock(df, stock):
+    return df[df["category"] == stock]
+
 def calculate_sentiment_metrics(df):
     # count label
     label_counts = df['label'].value_counts()
@@ -183,7 +187,12 @@ def display_news(filtered_df, start_idx, end_idx):
         url = row['url']
         category = row['category']
         label = row['label']
-        source = row['source']
+
+        try:
+            source = row['source']
+
+        except KeyError:
+            source = "Investing.com"
 
         color = {
             "negative": "red",
@@ -192,7 +201,14 @@ def display_news(filtered_df, start_idx, end_idx):
         }.get(label.lower(), "black")
 
         st.markdown(f'<span style="color:{color};">{label.capitalize()}</span>', unsafe_allow_html=True)
-        st.markdown(f"##### <a href='{url}' style='color:black; font-size:20px;'>{title}</a>", unsafe_allow_html=True)
+
+        # Assuming title and url are defined
+        title_safe = title.replace('_', '&lowbar;')  # Replace underscores with HTML entity
+
+        # Combine <h6> with <a> tag for the title with underline
+        st.write(f"<h6><a href='{url}' style='color:black; font-size:20px; text-decoration:underline;'>{title_safe}</a></h6>", unsafe_allow_html=True)
+
+        # st.write(f"<h6>{count + 1}. {sentence}</h6>", unsafe_allow_html=True)
         st.write(f'###### Source: {source.capitalize()}. Category: {category.capitalize()}. Date: {date.strftime("%d-%m-%Y")}')
         stspace(2)
 
@@ -338,3 +354,38 @@ def run_postprocess_streamlit(date, dailyfx, econtimes, financialtimes, suffix= 
     run_postprocess(**combine_params)
 
     return True
+
+def get_bart():
+    # Load the tokenizer
+    tokenizer = BartTokenizer.from_pretrained(os.path.join(model_path, "bart-large-cnn"))
+    # Load the model
+    model = BartForConditionalGeneration.from_pretrained(os.path.join(model_path, "bart-large-cnn"))
+
+    return tokenizer, model
+
+def get_data_stock():
+    df = utils.load(os.path.join(combined_data_path, 'combined_data_stock.feather'))
+    return df
+
+def summarize_with_bart(
+        tokenizer,
+        model,
+        text
+):
+    # Tokenize the input text
+    inputs = tokenizer(text, return_tensors="pt", max_length=512, truncation=True)
+
+    # Generate summary
+    summary_ids = model.generate(inputs["input_ids"], max_length=100, min_length=25, length_penalty=2.0, num_beams=4, early_stopping=True)
+
+    # Decode the summary
+    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+
+    return summary
+
+def submit_bart():
+    st.session_state.bart_input = st.session_state.bart_widget
+
+def submit_distilbert():
+    st.session_state.distilbert_input = st.session_state.distilbert_widget
+    st.session_state.bart_input = ''
