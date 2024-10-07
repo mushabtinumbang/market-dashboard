@@ -1,4 +1,2 @@
-model/finbert/pytorch_model.bin filter=lfs diff=lfs merge=lfs -text
 model/distilbert filter=lfs diff=lfs merge=lfs -text
 model/distilbert/pytorch_model.bin filter=lfs diff=lfs merge=lfs -text
-model/bart-large-cnn/pytorch_model.bin filter=lfs diff=lfs merge=lfs -text
