@@ -1,0 +1,67 @@
+# Stock Config
+run_scraper_stock_pipeline_params:
+  NVDA: 
+    df_out_feathername: 'investing_NVDA_{{suffix}}.feather'
+    url: 'https://www.investing.com/equities/nvidia-corp-news/'
+  INTC: 
+    df_out_feathername: 'investing_INTC_{{suffix}}.feather'
+    url: 'https://www.investing.com/equities/intel-corp-news/'
+  IBM: 
+    df_out_feathername: 'investing_IBM_{{suffix}}.feather'
+    url: 'https://www.investing.com/equities/ibm-news/'
+  AAPL: 
+    df_out_feathername: 'investing_AAPL_{{suffix}}.feather'
+    url:  'https://www.investing.com/equities/apple-computer-inc-news/'
+  META:
+    df_out_feathername: 'investing_META_{{suffix}}.feather'
+    url: 'https://www.investing.com/equities/facebook-inc-news/'
+
+run_summarizer_stock_pipeline_params:
+  NVDA: 
+    df_scrape_out_feathername: 'investing_NVDA_{{suffix}}.feather'
+    df_summarized_out_feathername: 'investing_NVDA_summarized_{{suffix}}.feather'
+  INTC: 
+    df_scrape_out_feathername: 'investing_INTC_{{suffix}}.feather'
+    df_summarized_out_feathername: 'investing_INTC_summarized_{{suffix}}.feather'
+  IBM: 
+    df_scrape_out_feathername: 'investing_IBM_{{suffix}}.feather'
+    df_summarized_out_feathername: 'investing_IBM_summarized_{{suffix}}.feather'
+  AAPL: 
+    df_scrape_out_feathername: 'investing_AAPL_{{suffix}}.feather'
+    df_summarized_out_feathername: 'investing_AAPL_summarized_{{suffix}}.feather'
+  META: 
+    df_scrape_out_feathername: 'investing_META_{{suffix}}.feather'
+    df_summarized_out_feathername: 'investing_META_summarized_{{suffix}}.feather'
+
+run_sentiment_prediction_stock_pipeline_params:
+  NVDA: 
+    df_summarized_out_feathername: 'investing_NVDA_summarized_{{suffix}}.feather'
+    df_predicted_out_feathername: 'investing_NVDA_predicted_{{suffix}}.feather'
+  INTC: 
+    df_summarized_out_feathername: 'investing_INTC_summarized_{{suffix}}.feather'
+    df_predicted_out_feathername: 'investing_INTC_predicted_{{suffix}}.feather'
+  IBM: 
+    df_summarized_out_feathername: 'investing_IBM_summarized_{{suffix}}.feather'
+    df_predicted_out_feathername: 'investing_IBM_predicted_{{suffix}}.feather'
+  AAPL: 
+    df_summarized_out_feathername: 'investing_AAPL_summarized_{{suffix}}.feather'
+    df_predicted_out_feathername: 'investing_AAPL_predicted_{{suffix}}.feather'
+  META: 
+    df_summarized_out_feathername: 'investing_META_summarized_{{suffix}}.feather'
+    df_predicted_out_feathername: 'investing_META_predicted_{{suffix}}.feather'
+run_sentiment_postprocessing_pipeline_params:
+  NVDA: 
+    out_feathername: 'combined_data_stock.feather'
+    df_predicted_out_feathername: 'investing_NVDA_predicted_{{suffix}}.feather'
+  INTC: 
+    out_feathername: 'combined_data_stock.feather'
+    df_predicted_out_feathername: 'investing_INTC_predicted_{{suffix}}.feather'
+  IBM: 
+    out_feathername: 'combined_data_stock.feather'
+    df_predicted_out_feathername: 'investing_IBM_predicted_{{suffix}}.feather'
+  AAPL: 
+    out_feathername: 'combined_data_stock.feather'
+    df_predicted_out_feathername: 'investing_AAPL_predicted_{{suffix}}.feather'
+  META: 
+    out_feathername: 'combined_data_stock.feather'
+    df_predicted_out_feathername: 'investing_META_predicted_{{suffix}}.feather'
