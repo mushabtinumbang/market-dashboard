@@ -22,6 +22,7 @@ predict-sentiments:
 run-streamlit:
 	$(STREAMLIT) run app.py
 
+# Scrape Investing scripts
 scrape-investing:
 	$(PYTHON) -m src.scripts.selenium_investing --date='$(DATE)' --suffix='$(SUFFIX)'
 
@@ -29,3 +30,13 @@ scrape-investing:
 predict-stocks:
 	$(PYTHON) -m src.main.main_predict_stock --date='$(DATE)' --stock='$(STOCK)' --suffix='$(SUFFIX)' --pipeline=$(RUN_SCRAPER)  --pipeline=$(RUN_SUMMARIZER) --pipeline=$(RUN_PREDICTION)  --pipeline=$(PREPARE_STREAMLIT) 
 
+# Export Conda Environment
+conda-export-env:
+	$(PYTHON) conda_export_minimal.py --s_save="env.yml"
+
+# Run Setup
+setup-bart:
+	$(PYTHON) -m src.main.main_setup
+
+run-streamlit-stock:
+	$(STREAMLIT) run app_stock.py
