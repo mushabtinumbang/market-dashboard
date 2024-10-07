@@ -1,73 +1,117 @@
-# Dashboard Sentimen Pasar Keuangan
+# Financial Market Sentiment Dashboard
+-----------
+-----------
+### Project Description
+This project is a financial market sentiment prediction dashboard designed to analyze financial news by providing sentiment predictions (positive, negative, or neutral) and summarizing news content. The dashboard is built using various Machine Learning techniques and provides an intuitive interface for users.  The project consists of two main apps: the Forex market app and the stock market app.
 
-## Deskripsi Proyek
----------------------
-Proyek ini merupakan sebuah dashboard prediksi sentimen pasar keuangan yang bertujuan untuk menganalisis berita keuangan dan memberikan prediksi sentimen (positif, negatif, atau netral) dari berita tersebut. Dashboard ini dibangun menggunakan berbagai teknik Machine Learning dan menyediakan antarmuka yang intuitif untuk pengguna.
-
-## Sumber Data
-Data Training:
+### Data Sources
+**Training Data:**
 [Financial Phrase Bank](https://huggingface.co/datasets/financial_phrasebank) (Hugging Face)
 
-Data berita diperoleh dari dua sumber yang berbeda:
-1. [DailyFX](https://www.dailyfx.com) (Kategori: Forex)
-2. [The Economic Times](https://economictimes.indiatimes.com) (Kategori: Banking, Economy, Market, Forex)
-3. [Financial Times](https://www.ft.com/currencies) (Kategori: Currencies, Forex)
+**LLM Model Used**:
+1. [Distilbert Base Uncased](https://huggingface.co/distilbert/distilbert-base-uncased)
+2. [BART Large CNN](https://huggingface.co/facebook/bart-large-cnn)
 
+**Forex News data** is obtained from three different sources with BeautifulSoup.
+1. [DailyFX](https://www.dailyfx.com) (Category: Forex)
+2. [The Economic Times](https://economictimes.indiatimes.com) (Category: Banking, Economy, Market, Forex)
+3. [Financial Times](https://www.ft.com/currencies) (Category: Currencies, Forex)
 
-## Hasil Komparasi Algoritma Machine Learning:
-----------------------------------------------
-| Algoritma         | Akurasi | Precision (avg) | Recall (avg) | F1-Score (avg) |
+**Stock News data** is obtained from [Investing.com](https://www.investing.com/equities) alone for now using Selenium and BeautifulSoup.
+
+### Sentiment Prediction Algorithm Comparison Results:
+| Algorithm          | Accuracy | Precision (avg) | Recall (avg) | F1-Score (avg) |
 |-------------------|---------|-----------------|--------------|----------------|
-| Naive Bayes       | 0.702   | 0.69            | 0.70         | 0.69           |
-| SVM               | 0.753   | 0.75            | 0.75         | 0.73           |
-| Fine Tuned DistilBERT| 0.854   | 0.85            | 0.85         | 0.85           |
-
-
-Instalasi
-============
-### Clone Repositori
+| Naive Bayes       | 0.702   | 0.69            | 0.70         | 0.69           |
+| SVM               | 0.753   | 0.75            | 0.75         | 0.73           |
+| Fine Tuned DistilBERT| 0.854   | 0.85            | 0.85         | 0.85           |
 -----------
-Pastikan anda telah menginstall git lfs (Large File Storage) untuk dapat melakukan git clone pada model Machine Learning.
+-----------
+## Installation
+#### Clone Repository
+-----------
+Make sure you have installed git lfs (Large File Storage) to be able to git clone the Machine Learning model.
 ```bash
-$ git clone https://github.com/mushabtinumbang/market-dashboard.git
-$ cd market-dashboard
+$ git clone https://github.com/mushabtinumbang/market-sentiment-LLM.git
+$ cd market-sentiment-LLM
 $ git lfs install
 $ git lfs pull
 ```
-### Membuat Environment
+### Creating an Environment
 -----------
-Langkah selanjutnya untuk menjalakan program ini adalah untuk membuat environment conda. Hal ini bertujuan untuk memastikan semua dependensi dan library yang dipakai nantinya menggunakan versi yang sama dan tidak menghasilkan sebuah error. Untuk menginstal environment, user dapat menjalankan script ini pada terminal.
+The next step to run this program is to create a conda environment. This is to ensure that all dependencies and libraries used later use the same version and do not produce any errors. To install the environment, the user can run this script in the terminal.
 ```bash
 $ make create-env
-$ conda activate market-sentiment-DistilBERT
+$ conda activate market-dash
+```
+### Setup BART for Summarizer
+-----------
+Since the quota for Git LFS is limited, we have to download the BART summarizer model manually. To download the model, run the code snippet below.
+```bash
+$ make setup-bart
+```
+-----------
+-----------
+## Stock Market Pipeline
+#### Scraping, Predicting, and Summarizing News Data
+-----------
+The script below is used to run the main program for the stock market app. With this script, users can scrape stock-related news pages in real-time. Users can specify the date range for the news they wish to scrape.
+
+After scraping, users can instantly predict the sentiment and summarize the content of the stock news. The prediction results are then processed and presented within the Streamlit interface.
+
+| Command          | Description |
+|-----------------|------------|
+| DATE            | Determines the period of data to be processed. Example: 'latest' or for a date range, input it like this: "2020-01-02\|2020-01-03" (multiple dates separated by \|). |
+| SUFFIX          | Determines the suffix of the output file name. |
+| RUN_SCRAPER     | Determines whether to run the scraping function or not. Choose 'y' for yes and 'n' for no. |
+| RUN_SUMMARIZER     | Determines whether to run the summarizer function or not. Choose 'y' for yes and 'n' for no. |
+| RUN_PREDICTION  | Determines whether to run the prediction using the machine learning model or not. Choose 'y' for yes and 'n' for no. |
+| PREPARE_STREAMLIT | Determines whether to further process the data for Streamlit or not. Choose 'y' for yes and 'n' for no. |
+
+Based on these parameters, users can change the date, specify the news pages to scrape, and customize the overall pipeline. Here's an example of a script that can be run.
+```bash
+$ export DATE='06-10-2024|07-10-2024' && 
+export STOCK='META' &&
+export SUFFIX='test' &&
+export RUN_SCRAPER='y' &&
+export RUN_SUMMARIZER='y' &&
+export RUN_PREDICTION='y' &&
+export PREPARE_STREAMLIT='n' &&
+make predict-stocks
 ```
 
-
-Menjalankan Program
-===
-### Scrape dan Prediksi Data Berita
+#### Streamlit
 -----------
-Script di bawah ini digunakan untuk menjalankan program utama. Dengan script ini, pengguna dapat melakukan scraping secara real-time pada laman berita keuangan. Pengguna juga bisa mengatur tanggal berita yang ingin di-scrape.
+To run the Streamlit for the Stock app, run this command.
+```bash
+make run-streamlit-stock
+```
+-----------
+-----------
+## Forex Market Pipeline
+### Running the Program
+#### Scraping and Predicting News Data
+-----------
+The script below is used to run the main program for forex app. With this script, users can perform real-time scraping on financial forexd news pages. Users can also set the date of the news they want to scrape.
 
-Setelah scraping, pengguna juga bisa langsung memprediksi sentimen dari berita-berita tersebut. Hasil prediksi kemudian akan diolah dan ditampilkan di antarmuka Streamlit.
+After scraping, users can also immediately predict the sentiment of the news. The prediction results will then be processed and displayed in the Streamlit interface.
 
-
-| Command         | Deskripsi |
+| Command          | Description |
 |-----------------|------------|
-| DATE            | Menentukan periode data yang ingin diproses. Contoh: 'latest' atau jika ingin rentang tanggal, masukkan seperti ini: "2020-01-02\|2020-01-03" (beberapa tanggal dipisahkan dengan \|). |
-| DAILYFX         | Menentukan apakah ingin melakukan scraping dari DailyFX atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
-| ECONTIMES       | Menentukan apakah ingin melakukan scraping dari Economic Times atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
-| FINANCIALTIMES       | Menentukan apakah ingin melakukan scraping dari Financial Times atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
-| SUFFIX          | Menentukan akhiran nama file output. |
-| RUN_SCRAPER     | Menentukan apakah ingin menjalankan fungsi scraper atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
-| RUN_PREDICTION  | Menentukan apakah ingin menjalankan prediksi menggunakan model machine learning atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
-| PREPARE_STREAMLIT | Menentukan apakah ingin memproses data lebih lanjut untuk Streamlit atau tidak. Pilih 'y' untuk ya dan 'n' untuk tidak. |
+| DATE            | Determines the period of data to be processed. Example: 'latest' or for a date range, input it like this: "2020-01-02\|2020-01-03" (multiple dates separated by \|). |
+| DAILYFX         | Determines whether to scrape data from DailyFX or not. Choose 'y' for yes and 'n' for no. **Note: Currently, the page is not available for some network in Indonesia, please use VPN if you want to proceed to scrape DailyFX**|
+| ECONTIMES       | Determines whether to scrape data from Economic Times or not. Choose 'y' for yes and 'n' for no. |
+| FINANCIALTIMES       | Determines whether to scrape data from Financial Times or not. Choose 'y' for yes and 'n' for no. |
+| SUFFIX          | Determines the suffix of the output file name. |
+| RUN_SCRAPER     | Determines whether to run the scraping function or not. Choose 'y' for yes and 'n' for no. |
+| RUN_PREDICTION  | Determines whether to run the prediction using the machine learning model or not. Choose 'y' for yes and 'n' for no. |
+| PREPARE_STREAMLIT | Determines whether to further process the data for Streamlit or not. Choose 'y' for yes and 'n' for no. |
 
-Berdasarkan parameter-parameter yang ada, pengguna dapat mengubah tanggal, mengatur laman berita untuk scraping, hingga mengatur pipeline yang akan dijalankan nantinya. Berikut adalah contoh script yang dapat dijalankan.
+Based on these parameters, users can change the date, specify the news pages to scrape, and customize the overall pipeline. Here's an example of a script that can be run.
 
 ```bash
 $ export DATE='29-06-2024|12-07-2024' &&
-export DAILYFX='y' &&
+export DAILYFX='n' &&
 export ECONTIMES='y' &&
 export FINANCIALTIMES='y' &&
 export SUFFIX='test' &&
@@ -77,14 +121,15 @@ export PREPARE_STREAMLIT='y' &&
 make predict-sentiments
 ```
 
-### Streamlit
+#### Streamlit
 -----------
-Untuk menjalankan aplikasi Streamlit, gunakan perintah berikut.
+To run the Streamlit for the Forex app, run this command.
 ```bash
 make run-streamlit
 ```
+-----------
+-----------
 
 ## Citation
 
-Proyek ini dibuat oleh Mushab Tinumbang di bawah [Universitas Padjadjaran](https://www.unpad.ac.id/).
-
+This project was created by Mushab Tinumbang under [Universitas Padjadjaran](https://www.unpad.ac.id/).
