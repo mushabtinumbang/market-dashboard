@@ -38,5 +38,6 @@ conda-export-env:
 setup-bart:
 	$(PYTHON) -m src.main.main_setup
 
+# Run Streamlit for Stock App
 run-streamlit-stock:
 	$(STREAMLIT) run app_stock.py
