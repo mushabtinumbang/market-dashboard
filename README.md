@@ -1,6 +1,6 @@
 # Financial Market Sentiment Dashboard
 -----------
------------
+
 ### Project Description
 This project is a financial market sentiment prediction dashboard designed to analyze financial news by providing sentiment predictions (positive, negative, or neutral) and summarizing news content. The dashboard is built using various Machine Learning techniques and provides an intuitive interface for users.  The project consists of two main apps: the Forex market app and the stock market app.
 
@@ -26,10 +26,8 @@ This project is a financial market sentiment prediction dashboard designed to an
 | SVM               | 0.753   | 0.75            | 0.75         | 0.73           |
 | Fine Tuned DistilBERT| 0.854   | 0.85            | 0.85         | 0.85           |
 -----------
------------
 ## Installation
 #### Clone Repository
------------
 Make sure you have installed git lfs (Large File Storage) to be able to git clone the Machine Learning model.
 ```bash
 $ git clone https://github.com/mushabtinumbang/market-sentiment-LLM.git
@@ -38,23 +36,19 @@ $ git lfs install
 $ git lfs pull
 ```
 ### Creating an Environment
------------
 The next step to run this program is to create a conda environment. This is to ensure that all dependencies and libraries used later use the same version and do not produce any errors. To install the environment, the user can run this script in the terminal.
 ```bash
 $ make create-env
 $ conda activate market-dash
 ```
 ### Setup BART for Summarizer
------------
 Since the quota for Git LFS is limited, we have to download the BART summarizer model manually. To download the model, run the code snippet below.
 ```bash
 $ make setup-bart
 ```
 -----------
------------
 ## Stock Market Pipeline
 #### Scraping, Predicting, and Summarizing News Data
------------
 The script below is used to run the main program for the stock market app. With this script, users can scrape stock-related news pages in real-time. Users can specify the date range for the news they wish to scrape.
 
 After scraping, users can instantly predict the sentiment and summarize the content of the stock news. The prediction results are then processed and presented within the Streamlit interface.
@@ -81,17 +75,14 @@ make predict-stocks
 ```
 
 #### Streamlit
------------
 To run the Streamlit for the Stock app, run this command.
 ```bash
 make run-streamlit-stock
 ```
 -----------
------------
 ## Forex Market Pipeline
 ### Running the Program
 #### Scraping and Predicting News Data
------------
 The script below is used to run the main program for forex app. With this script, users can perform real-time scraping on financial forexd news pages. Users can also set the date of the news they want to scrape.
 
 After scraping, users can also immediately predict the sentiment of the news. The prediction results will then be processed and displayed in the Streamlit interface.
@@ -122,12 +113,10 @@ make predict-sentiments
 ```
 
 #### Streamlit
------------
 To run the Streamlit for the Forex app, run this command.
 ```bash
 make run-streamlit
 ```
------------
 -----------
 
 ## Citation
