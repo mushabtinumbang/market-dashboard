@@ -165,3 +165,6 @@ __pycache__/
 # Ignore logs
 logs/
 results/
+
+# Ignore large model
+*.bin
